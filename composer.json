@@ -1,0 +1,5 @@
+{
+    "require": {
+        "a5hleyrich/wp-background-processing": "^1.0"
+    }
+}
