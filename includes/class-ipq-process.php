@@ -58,10 +58,15 @@ if ( ! class_exists( 'IPQ_Process' ) ) {
 				return false;
 			}
 
-			$upload_info = wp_upload_dir();
-			$img_path = trailingslashit( $upload_info['basedir'] ) . $image_meta['file'];
+			add_filter( 'as3cf_get_attached_file_copy_back_to_local', '__return_true' );
+			$img_path = Image_Processing_Queue::get_image_path( $post_id );
+
+			if ( ! $img_path ) {
+				return false;
+			}
 
 			$editor = wp_get_image_editor( $img_path );
+
 			if ( is_wp_error( $editor ) ) {
 				throw new IPQ_Process_Exception( 'Unable to get WP_Image_Editor for file "' . $img_path . '": ' . $editor->get_error_message() . ' (is GD or ImageMagick installed?)' );
 			}
