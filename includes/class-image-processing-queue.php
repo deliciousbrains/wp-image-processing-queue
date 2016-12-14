@@ -168,6 +168,16 @@ if ( ! class_exists( 'Image_Processing_Queue' ) ) {
 		}
 
 		/**
+		 * Get an image's file path.
+		 *
+		 * @param int $post_id ID of the image post.
+		 * @return false|string
+		 */
+		public static function get_image_path( $post_id ) {
+			return get_attached_file( $post_id );
+		}
+
+		/**
 		 * Get an image's post meta data.
 		 *
 		 * @param int $post_id ID of the image post.
