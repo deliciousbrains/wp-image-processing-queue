@@ -139,6 +139,10 @@ if ( ! class_exists( 'Image_Processing_Queue' ) ) {
 					continue;
 				}
 
+				if ( self::is_size_larger_than_original( $post_id, $size ) ) {
+					continue;
+				}
+
 				$item = array(
 					'post_id' => $post_id,
 					'width' => $size[0],
@@ -209,6 +213,28 @@ if ( ! class_exists( 'Image_Processing_Queue' ) ) {
 			$image_meta = self::get_image_meta( $post_id );
 			$size_name = self::get_size_name( $size );
 			return isset( $image_meta['sizes'][ $size_name ] );
+		}
+
+		/**
+		 * Check if an image size is larger than the original.
+		 *
+		 * @param int   $post_id Image ID.
+		 * @param array $size array in format array(width,height,crop).
+		 *
+		 * @return bool
+		 */
+		public static function is_size_larger_than_original( $post_id, $size ) {
+			$image_meta = self::get_image_meta( $post_id );
+
+			if ( ! isset( $image_meta['width'] ) || ! isset( $image_meta['height'] ) ) {
+				return true;
+			}
+
+			if ( $size[0] > $image_meta['width'] || $size[1] > $image_meta['height'] ) {
+				return true;
+			}
+
+			return false;
 		}
 	}
 
