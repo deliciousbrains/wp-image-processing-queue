@@ -33,11 +33,11 @@ $ composer install
 You'll also need to add the following to your functions.php file:
 
 ```php
-require_once TEMPLATEPATH . '/image-processing-queue/vendor/a5hleyrich/wp-background-processing/classes/wp-async-request.php';
-require_once TEMPLATEPATH . '/image-processing-queue/vendor/a5hleyrich/wp-background-processing/classes/wp-background-process.php';
-require_once TEMPLATEPATH . '/image-processing-queue/includes/class-ipq-process.php';
-require_once TEMPLATEPATH . '/image-processing-queue/includes/class-image-processing-queue.php';
-require_once TEMPLATEPATH . '/image-processing-queue/includes/ipq-template-functions.php';
+require_once get_stylesheet_directory() . '/image-processing-queue/vendor/a5hleyrich/wp-background-processing/classes/wp-async-request.php';
+require_once get_stylesheet_directory() . '/image-processing-queue/vendor/a5hleyrich/wp-background-processing/classes/wp-background-process.php';
+require_once get_stylesheet_directory() . '/image-processing-queue/includes/class-ipq-process.php';
+require_once get_stylesheet_directory() . '/image-processing-queue/includes/class-image-processing-queue.php';
+require_once get_stylesheet_directory() . '/image-processing-queue/includes/ipq-template-functions.php';
 
 Image_Processing_Queue::instance();
 
