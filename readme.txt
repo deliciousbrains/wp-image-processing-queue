@@ -51,5 +51,8 @@ You'll also need to add the following to your functions.php file:
 
 == Changelog ==
 
+= 0.2 =
+* New: `ipq_get_theme_image_url` function added for returning a single image URL
+
 = 0.1 =
 * First release
