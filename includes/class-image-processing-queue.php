@@ -110,6 +110,39 @@ if ( ! class_exists( 'Image_Processing_Queue' ) ) {
 		}
 
 		/**
+		 * Check if the image sizes exist and push them to the queue if not.
+		 *
+		 * @param int   $post_id
+		 * @param array $sizes
+		 */
+		protected function process_image( $post_id, $sizes ) {
+			$new_item = false;
+
+			foreach ( $sizes as $size ) {
+				if ( self::does_size_already_exist_for_image( $post_id, $size ) ) {
+					continue;
+				}
+
+				if ( self::is_size_larger_than_original( $post_id, $size ) ) {
+					continue;
+				}
+
+				$item = array(
+					'post_id' => $post_id,
+					'width'   => $size[0],
+					'height'  => $size[1],
+					'crop'    => $size[2],
+				);
+				$this->process->push_to_queue( $item );
+				$new_item = true;
+			}
+
+			if ( $new_item ) {
+				$this->process->save()->dispatch();
+			}
+		}
+
+		/**
 		 * Get image HTML for a specific context in a theme, specifying the exact sizes
 		 * for the image. The first image size is always used as the `src` and the other
 		 * sizes are used in the `srcset` if they're the same aspect ratio as the original
@@ -132,32 +165,34 @@ if ( ! class_exists( 'Image_Processing_Queue' ) ) {
 		 * @return string HTML img element or empty string on failure.
 		 */
 		public function get_image( $post_id, $sizes, $attr = '' ) {
-			// If we haven't created the image yet, add it to the queue.
-			$new_item = false;
-			foreach ( $sizes as $size ) {
-				if ( self::does_size_already_exist_for_image( $post_id, $size ) ) {
-					continue;
-				}
-
-				if ( self::is_size_larger_than_original( $post_id, $size ) ) {
-					continue;
-				}
-
-				$item = array(
-					'post_id' => $post_id,
-					'width' => $size[0],
-					'height' => $size[1],
-					'crop' => $size[2],
-				);
-				$this->process->push_to_queue( $item );
-				$new_item = true;
-			}
-
-			if ( $new_item ) {
-				$this->process->save()->dispatch();
-			}
+			$this->process_image( $post_id, $sizes );
 
 			return wp_get_attachment_image( $post_id, array( $sizes[0][0], $sizes[0][1] ), false, $attr );
+		}
+
+		/**
+		 * Get image URL for a specific context in a theme, specifying the exact size
+		 * for the image. If the image size does not currently exist, it is queued for
+		 * creation by a background process. Example:
+		 *
+		 * echo ipq_get_theme_image_url( 1353, array( 600, 400, false ) );
+		 *
+		 * @param int   $post_id
+		 * @param array $size
+		 *
+		 * @return string
+		 */
+		public function get_image_url( $post_id, $size ) {
+			$this->process_image( $post_id, array( $size ) );
+
+			$size = self::get_size_name( $size );
+			$src  = wp_get_attachment_image_src( $post_id, $size );
+
+			if ( isset( $src[0] ) ) {
+				return $src[0];
+			}
+
+			return '';
 		}
 
 		/**
@@ -211,7 +246,8 @@ if ( ! class_exists( 'Image_Processing_Queue' ) ) {
 		 */
 		public static function does_size_already_exist_for_image( $post_id, $size ) {
 			$image_meta = self::get_image_meta( $post_id );
-			$size_name = self::get_size_name( $size );
+			$size_name  = self::get_size_name( $size );
+
 			return isset( $image_meta['sizes'][ $size_name ] );
 		}
 
