@@ -71,8 +71,10 @@ if ( ! class_exists( 'IPQ_Process' ) ) {
 				throw new IPQ_Process_Exception( 'Unable to get WP_Image_Editor for file "' . $img_path . '": ' . $editor->get_error_message() . ' (is GD or ImageMagick installed?)' );
 			}
 
-			if ( is_wp_error( $editor->resize( $width, $height, $crop ) ) ) {
-				throw new IPQ_Process_Exception( 'Error resizing image: ' . $editor->get_error_message() );
+			$resize = $editor->resize( $width, $height, $crop );
+
+			if ( is_wp_error( $resize ) ) {
+				throw new IPQ_Process_Exception( 'Error resizing image: ' . $resize->get_error_message() );
 			}
 
 			$resized_file = $editor->save();
