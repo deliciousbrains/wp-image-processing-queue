@@ -27,13 +27,6 @@ if ( ! class_exists( 'Image_Processing_Queue' ) ) {
 		private $is_updating_backup_sizes = false;
 
 		/**
-		 * Instance of the background process class
-		 *
-		 * @var IPQ_Process|null
-		 */
-		public $process = null;
-
-		/**
 		 * Singleton
 		 *
 		 * @return Image_Processing_Queue|null
@@ -49,7 +42,6 @@ if ( ! class_exists( 'Image_Processing_Queue' ) ) {
 		 * Image_Processing_Queue constructor.
 		 */
 		public function __construct() {
-			$this->process = new IPQ_Process();
 			add_filter( 'update_post_metadata', array( $this, 'filter_update_post_metadata' ), 10, 5 );
 		}
 
@@ -116,8 +108,6 @@ if ( ! class_exists( 'Image_Processing_Queue' ) ) {
 		 * @param array $sizes
 		 */
 		protected function process_image( $post_id, $sizes ) {
-			$new_item = false;
-
 			foreach ( $sizes as $size ) {
 				if ( self::does_size_already_exist_for_image( $post_id, $size ) ) {
 					continue;
@@ -133,12 +123,8 @@ if ( ! class_exists( 'Image_Processing_Queue' ) ) {
 					'height'  => $size[1],
 					'crop'    => $size[2],
 				);
-				$this->process->push_to_queue( $item );
-				$new_item = true;
-			}
-
-			if ( $new_item ) {
-				$this->process->save()->dispatch();
+			
+				wp_queue()->push( new Image_Processing_Job( $item ) );
 			}
 		}
 

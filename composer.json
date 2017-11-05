@@ -1,5 +1,6 @@
 {
     "require": {
-        "a5hleyrich/wp-background-processing": "^1.0"
+        "php": ">=5.3.0",
+        "a5hleyrich/wp-queue": "^1.2"
     }
 }

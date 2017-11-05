@@ -27,9 +27,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once plugin_dir_path( __FILE__ ) . 'vendor/a5hleyrich/wp-background-processing/classes/wp-async-request.php';
-require_once plugin_dir_path( __FILE__ ) . 'vendor/a5hleyrich/wp-background-processing/classes/wp-background-process.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-ipq-process.php';
+require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-image-processing-job.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-image-processing-queue.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/ipq-template-functions.php';
 
