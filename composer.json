@@ -2,5 +2,13 @@
     "require": {
         "php": ">=5.3.0",
         "a5hleyrich/wp-queue": "^1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Image_Processing_Queue\\": "src\\Image_Processing_Queue"
+        },
+        "files": [
+            "src/functions.php"
+        ]
     }
 }

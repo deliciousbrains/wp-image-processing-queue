@@ -28,11 +28,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-image-processing-job.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-image-processing-queue.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/ipq-template-functions.php';
 
-Image_Processing_Queue::instance();
+Image_Processing_Queue\Queue::instance();
 
 wp_queue()->cron();
 

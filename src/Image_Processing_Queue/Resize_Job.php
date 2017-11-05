@@ -1,8 +1,10 @@
 <?php
 
+namespace Image_Processing_Queue;
+
 use WP_Queue\Job;
 
-class Image_Processing_Job extends Job {
+class Resize_Job extends Job {
 
     /**
      * @var array
@@ -33,21 +35,21 @@ class Image_Processing_Job extends Job {
         $crop    = $item['crop'];
 
         if ( ! $width && ! $height ) {
-            throw new IPQ_Process_Exception( "Invalid dimensions '{$width}x{$height}'" );
+            throw new Exception( "Invalid dimensions '{$width}x{$height}'" );
         }
 
-        if ( Image_Processing_Queue::does_size_already_exist_for_image( $post_id, array( $width, $height, $crop ) ) ) {
+        if ( Queue::does_size_already_exist_for_image( $post_id, array( $width, $height, $crop ) ) ) {
             return false;
         }
 
-        $image_meta = Image_Processing_Queue::get_image_meta( $post_id );
+        $image_meta = Queue::get_image_meta( $post_id );
 
         if ( ! $image_meta ) {
             return false;
         }
 
         add_filter( 'as3cf_get_attached_file_copy_back_to_local', '__return_true' );
-        $img_path = Image_Processing_Queue::get_image_path( $post_id );
+        $img_path = Queue::get_image_path( $post_id );
 
         if ( ! $img_path ) {
             return false;
@@ -56,22 +58,22 @@ class Image_Processing_Job extends Job {
         $editor = wp_get_image_editor( $img_path );
 
         if ( is_wp_error( $editor ) ) {
-            throw new IPQ_Process_Exception( 'Unable to get WP_Image_Editor for file "' . $img_path . '": ' . $editor->get_error_message() . ' (is GD or ImageMagick installed?)' );
+            throw new Exception( 'Unable to get WP_Image_Editor for file "' . $img_path . '": ' . $editor->get_error_message() . ' (is GD or ImageMagick installed?)' );
         }
 
         $resize = $editor->resize( $width, $height, $crop );
 
         if ( is_wp_error( $resize ) ) {
-            throw new IPQ_Process_Exception( 'Error resizing image: ' . $resize->get_error_message() );
+            throw new Exception( 'Error resizing image: ' . $resize->get_error_message() );
         }
 
         $resized_file = $editor->save();
 
         if ( is_wp_error( $resized_file ) ) {
-            throw new IPQ_Process_Exception( 'Unable to save resized image file: ' . $editor->get_error_message() );
+            throw new Exception( 'Unable to save resized image file: ' . $editor->get_error_message() );
         }
 
-        $size_name = Image_Processing_Queue::get_size_name( array( $width, $height, $crop ) );
+        $size_name = Queue::get_size_name( array( $width, $height, $crop ) );
         $image_meta['sizes'][ $size_name ] = array(
             'file'      => $resized_file['file'],
             'width'     => $resized_file['width'],
@@ -82,8 +84,3 @@ class Image_Processing_Job extends Job {
 	}
 
 }
-
-/**
-* Custom exception class for IPQ background processing
-*/
-class IPQ_Process_Exception extends Exception {}

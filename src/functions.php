@@ -23,7 +23,7 @@
  * @return string HTML img element or empty string on failure.
  */
 function ipq_get_theme_image( $post_id, $sizes, $attr = '' ) {
-	return Image_Processing_Queue::instance()->get_image( $post_id, $sizes, $attr );
+	return Image_Processing_Queue\Queue::instance()->get_image( $post_id, $sizes, $attr );
 }
 
 /**
@@ -39,5 +39,5 @@ function ipq_get_theme_image( $post_id, $sizes, $attr = '' ) {
  * @return string Img URL
  */
 function ipq_get_theme_image_url( $post_id, $size ) {
-	return Image_Processing_Queue::instance()->get_image_url( $post_id, $size );
+	return Image_Processing_Queue\Queue::instance()->get_image_url( $post_id, $size );
 }
