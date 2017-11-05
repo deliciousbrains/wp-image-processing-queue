@@ -20,7 +20,7 @@ class Image_Processing_Job extends Job {
 	 * Handle job logic.
 	 */
 	public function handle() {
-        $item = wp_parse_args( $item, array(
+        $item = wp_parse_args( $this->image, array(
             'post_id' => 0,
             'width'   => 0,
             'height'  => 0,

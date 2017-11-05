@@ -33,3 +33,13 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-image-processing-queu
 require_once plugin_dir_path( __FILE__ ) . 'includes/ipq-template-functions.php';
 
 Image_Processing_Queue::instance();
+
+wp_queue()->cron();
+
+/**
+ * Install queue tables on plugin activation.
+ */
+function ipq_activate_plugin() {
+	wp_queue_install_tables();
+}
+register_activation_hook( __FILE__, 'ipq_activate_plugin' );
