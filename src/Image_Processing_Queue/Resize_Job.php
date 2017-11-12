@@ -80,6 +80,8 @@ class Resize_Job extends Job {
             'height'    => $resized_file['height'],
             'mime-type' => $resized_file['mime-type'],
         );
+        
+        unset( $image_meta['ipq_locked'] );
         wp_update_attachment_metadata( $post_id, $image_meta );
 	}
 

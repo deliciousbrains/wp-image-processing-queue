@@ -100,6 +100,12 @@ class Queue {
 	 * @param array $sizes
 	 */
 	protected function process_image( $post_id, $sizes ) {
+		if ( self::is_attachment_locked( $post_id ) ) {
+			return;
+		}
+
+		$lock_attachment = false;
+
 		foreach ( $sizes as $size ) {
 			if ( self::does_size_already_exist_for_image( $post_id, $size ) ) {
 				continue;
@@ -117,6 +123,12 @@ class Queue {
 			);
 		
 			wp_queue()->push( new Resize_Job( $item ) );
+
+			$lock_attachment = true;
+		}
+
+		if ( $lock_attachment ) {
+			self::lock_attachment( $post_id );
 		}
 	}
 
@@ -249,5 +261,35 @@ class Queue {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Is an attachment locked?
+	 * 
+	 * @param int $post_id
+	 * 
+	 * @return bool
+	 */
+	public static function is_attachment_locked( $post_id ) {
+		$image_meta = self::get_image_meta( $post_id );
+
+		if ( isset( $image_meta['ipq_locked'] ) && $image_meta['ipq_locked'] ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Lock an attachment to prevent multiple queue jobs being created.
+	 * 
+	 * @param int $post_id
+	 */
+	public static function lock_attachment( $post_id ) {
+		$image_meta = self::get_image_meta( $post_id );
+		
+		$image_meta['ipq_locked'] = true;
+
+		wp_update_attachment_metadata( $post_id, $image_meta );
 	}
 }
