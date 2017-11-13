@@ -14,21 +14,42 @@ Image Processing Queue also accommodates responsive themes much better than OTF.
 
 To install Image Processing Queue as a plugin search for "[Image Processing Queue](https://wordpress.org/plugins/image-processing-queue/)" in your WordPress dashboard and install it from there.
 
-### Install as a Theme Library
+### Install as a Library
 
-If you're a theme developer and would like to include Image Processing Queue as a library in your theme, you'll need to clone this repository into your theme:
+If you're a plugin or theme developer you will need to require Image Processing Queue using Composer:
 
 ```
-$ cd /path/to/wordpress/wp-content/themes/your-theme/
-$ git clone git@github.com:deliciousbrains/wp-image-processing-queue.git image-processing-queue
-$ composer install
+$ composer require deliciousbrains/wp-image-processing-queue
 ```
 
-You'll also need to add the following to your functions.php file:
+The following boilerplate will need adding to your project, which will load the required files and ensure WP cron processes the images in the background:
 
 ```php
-require_once get_stylesheet_directory() . '/image-processing-queue/image-processing-queue.php';
+require_once '/vendor/autoload.php';
+wp_queue()->cron();
 ```
+
+The following database tables will also need creating:
+
+```sql
+CREATE TABLE {$wpdb->prefix}queue_jobs (
+id bigint(20) NOT NULL AUTO_INCREMENT,
+job longtext NOT NULL,
+attempts tinyint(3) NOT NULL DEFAULT 0,
+reserved_at datetime DEFAULT NULL,
+available_at datetime NOT NULL,
+created_at datetime NOT NULL,
+PRIMARY KEY  (id)
+
+CREATE TABLE {$wpdb->prefix}queue_failures (
+id bigint(20) NOT NULL AUTO_INCREMENT,
+job longtext NOT NULL,
+error text DEFAULT NULL,
+failed_at datetime NOT NULL,
+PRIMARY KEY  (id)
+```
+
+You can use the `wp_queue_install_tables()` helper function to create the required database tables. This should be called from within an [activation hook](https://developer.wordpress.org/reference/functions/register_activation_hook/) or custom upgrade routine.
 
 ## Usage
 
