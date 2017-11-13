@@ -67,6 +67,12 @@ echo ipq_get_theme_image( $post_id, array(
 );
 ```
 
+You can return an image URL directly using the `ipq_get_theme_image_url()` function by passing in the image ID and required size. If the image size doesn't exist it will be pushed to the queue and the closest matching image URL will be returned.
+
+```php
+echo ipq_get_theme_image_url( $post_id, array( 600, 400, false ) );
+```
+
 ## License
 
 [GPLv2+](http://www.gnu.org/licenses/gpl-2.0.html)
