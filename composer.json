@@ -1,5 +1,14 @@
 {
     "name": "deliciousbrains/wp-image-processing-queue",
+    "description": "Resize WordPress images in the background",
+    "keywords": ["wordpress", "images", "resize", "crop", "queue"],
+    "license": "GPLv2",
+    "authors": [
+        {
+            "name": "Delicious Brains",
+            "email": "nom@deliciousbrains.com"
+        }
+    ],
     "require": {
         "php": ">=5.3.0",
         "a5hleyrich/wp-queue": "^1.2"
