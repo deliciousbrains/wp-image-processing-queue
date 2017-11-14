@@ -26,6 +26,9 @@ The following boilerplate will need adding to your project, which will load the 
 
 ```php
 require_once '/vendor/autoload.php';
+
+Image_Processing_Queue\Queue::instance();
+
 wp_queue()->cron();
 ```
 

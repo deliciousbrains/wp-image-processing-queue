@@ -5,7 +5,7 @@ Plugin URI: http://wordpress.org/extend/plugins/image-processing-queue/
 Description: Allow theme designers to define image sizes for specific images and have them
 processed in the background
 Author: Delicious Brains
-Version: 0.2
+Version: 1.0.0
 Author URI: http://deliciousbrains.com/
 Text Domain: image-processing-queue
 Domain Path: /languages/
@@ -34,9 +34,14 @@ Image_Processing_Queue\Queue::instance();
 wp_queue()->cron();
 
 /**
- * Install queue tables on plugin activation.
+ * Perform plugin upgrade routines.
  */
-function ipq_activate_plugin() {
-	wp_queue_install_tables();
+function ipq_upgrade_routines() {
+	$version = get_site_option( 'ipq_version', '0.0.0' );
+
+	if ( version_compare( $version, '1.0.0', '<' ) ) {
+		wp_queue_install_tables();
+		update_site_option( 'ipq_version', '1.0.0' );
+	}
 }
-register_activation_hook( __FILE__, 'ipq_activate_plugin' );
+add_action( 'admin_init', 'ipq_upgrade_routines' );
