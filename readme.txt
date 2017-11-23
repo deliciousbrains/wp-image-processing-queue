@@ -2,8 +2,8 @@
 Contributors: bradt, deliciousbrains
 Tags: image processing, image resizing, thumbnails, theme, feature-plugin
 Requires at least: 4.6
-Tested up to: 4.8.3
-Stable tag: 1.0.0
+Tested up to: 4.9
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,6 +35,9 @@ filesystem when the image is deleted from the Media Library.
 To install as a plugin search for "Image Processing Queue" in your WordPress dashboard and install it from there.
 
 == Changelog ==
+
+= 1.1.0 =
+* Improvement: Added `ipq_job_attempts` and `ipq_cron_interval` filters.
 
 = 1.0.0 =
 * New: Uses [WP Queue](https://github.com/A5hleyRich/wp-queue) internally to process image jobs.
