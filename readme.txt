@@ -11,6 +11,14 @@ On-the-fly image processing done right.
 
 == Description ==
 
+**⚠️ WARNING ⚠️**
+
+**Image Processing Queue is no longer actively maintained.**
+
+This software is still free to use under the license provided, but users should be aware that it is not currently maintained. No additional releases, including security releases, will be made available.
+
+---
+
 Image Processing Queue is an alternative to on-the-fly (OTF) image processing (e.g. [Aqua Resizer](https://github.com/syamilmj/Aqua-Resizer))
 for WordPress themes.
 

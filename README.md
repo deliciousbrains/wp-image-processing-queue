@@ -1,5 +1,13 @@
 # Image Processing Queue
 
+**⚠️ WARNING ⚠️**
+
+**Image Processing Queue is no longer actively maintained.**
+
+This software is still free to use under the license provided, but users should be aware that it is not currently maintained. No additional releases, including security releases, will be made available.
+
+---
+
 Image Processing Queue is an alternative to on-the-fly (OTF) image processing (e.g. [Aqua Resizer](https://github.com/syamilmj/Aqua-Resizer)) for WordPress themes.
 
 Like OTF image processing, it allows theme developers to define image sizes for specific theme contexts rather than defining a size for all uploaded images. This greatly reduces the number of resized images and hence reduces disk space usage and the wait time when uploading an image.
